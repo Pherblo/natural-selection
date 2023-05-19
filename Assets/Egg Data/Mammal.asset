@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c2c409da265da648a15b19b70f449c4, type: 3}
+  m_Name: Mammal
+  m_EditorClassIdentifier: 
+  animalGroup: Mammal
+  minChildren: 5
+  maxChildren: 10
+  comfortTemp: 0
+  comfortMoisture: 0
+  size: 25
+  constitution: 5
+  strength: 5
+  dexterity: 5
+  sensing: 5
