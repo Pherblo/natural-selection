@@ -29,7 +29,7 @@ public class Habitat : MonoBehaviour
     [Header("Habitat Settings")]
     [Range(1, 50)] public float size = 5; // size of habitat in meters
     [Range(-50, 50)] public int temperature = 20; // habitat tempurature in Celsius
-    [Range(0, 100)]  public int humidity = 10; // habitat humidity in %
+    [Range(0, 100)] public int humidity = 10; // habitat humidity in %
     [Space]
     public int lowColorTemp = 3500; // sun temperature when habitate temperature is at its lowest
     public int highColorTemp = 9500; // and when its at its highest
@@ -57,39 +57,40 @@ public class Habitat : MonoBehaviour
             foodTimer += Time.deltaTime;
         else if (feederTggl.isOn)
         {
-            Spawn(foodGO, foodProduction);
+            Spawn(foodGO, foodProduction, foodLifetime);
             foodTimer = 0;
         }
     }
 
     // a generic way to spawn needed gameobjects on map
-    private void Spawn(GameObject obj, int num, System.Action<GameObject> onSpawn = null)
+    private void Spawn(GameObject obj, int num, int lifetime, System.Action<GameObject> onSpawn = null)
     {
         GameObject[] list = new GameObject[num];
         for (int i = 0; i < num; i++)
         {
             list[i] = Instantiate(obj, new Vector3(Random.Range(-size, size), 0, Random.Range(-size, size)), Quaternion.identity);
-            Destroy(list[i], foodLifetime);
 
-            if(onSpawn != null)
+            if (lifetime >= 0)
+                Destroy(list[i], lifetime);
+
+            if (onSpawn != null)
                 onSpawn(list[i]);
         }
     }
 
-    // public method to set time scale from external scripts / UI
-    public void SetTimeScale(float scale) => Time.timeScale = scale;
-
-
     // public method to hatch custom eggs from external scripts / UI
     public void HatchEgg(EggSO egg)
     {
-        Spawn(animalGO, Random.Range(egg.minChildren, egg.maxChildren), (animalObj) => 
+        Spawn(animalGO, Random.Range(egg.minChildren, egg.maxChildren), -1, (animalObj) =>
         {
             Animal animal = animalObj.GetComponent<Animal>();
             egg.HatchAnimal(animal);
             animal.habitat = this;
         });
     }
+
+    // public method to set time scale from external scripts / UI
+    public void SetTimeScale(float scale) => Time.timeScale = scale;
 
     // public methods that update internal variables from sliders
     #region SliderUpdateFunctions
@@ -108,7 +109,7 @@ public class Habitat : MonoBehaviour
     {
         temperature = (int)slider.value;
         tempTxt.text = "Temperature: " + temperature + "C";
-        
+
         // set the sun colour to change between 2 colours depending on the tempurature
         sun.colorTemperature = (((float)temperature + 50) / 100) * (lowColorTemp - highColorTemp) + highColorTemp;
     }
